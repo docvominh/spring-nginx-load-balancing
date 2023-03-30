@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+
+    <div class="column">
+        <p th:text="${message}"></p>
+        </br>
+        <div class="field">
+            <button type="button" id="newProduct" class="button button-new float-right">New</button>
+        </div>
+
+        <table id="productTable" class="table is-bordered">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Category</th>
+                <th>Name</th>
+                <th>Manufacture</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p:${products}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.category}"></td>
+                <td th:text="${p.name}"></td>
+                <td th:text="${p.manufacture}"></td>
+                <td th:text="${p.price}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="productModal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <form id="productForm" method="POST" th:action="@{/product/add}" th:object="${product}">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Create new product</p>
+                <button type="button" class="delete close-icon" aria-label="close"></button>
+            </header>
+
+            <div class="modal-card-body">
+<!--                <div id="tagFormMessage" class="message is-success" style="display: none;margin-left: 184px"></div>-->
+                <div class="bd-snippet bd-is-horizontal bd-is-3">
+                    <div class="bd-snippet-preview ">
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label for="category" class="required">Category</label>
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <input type="text" class="input" id="category" th:field="${product.category}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label for="name">Name</label>
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <input type="text" class="input" id="name" th:field="${product.name}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label for="manufacture">Manufacture</label>
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <input type="text" class="input" id="manufacture" th:field="${product.manufacture}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label for="price">Price</label>
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <input type="number" class="input" id="price" th:field="${product.price}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-card-foot" style="justify-content: flex-end;">
+                <button type="button" class="button cancel is-warning">Cancel</button>
+                <button type="submit" class="button is-success">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/js/postman.js}"></script>
+<script>
+
+    let postman = new Postman().init();
+    $('#newProduct').click(function () {
+        $('#productModal').addClass('is-active');
+    })
+
+    $(document).on('click', '.modal-card-head .close-icon, .modal-card-foot > .cancel', function () {
+        $(this).closest('.modal').removeClass('is-active');
+    })
+
+    $('#productForm').on('submit', function (event) {
+        event.preventDefault();
+        let action = 'product/add'
+        let formData = new FormData(this)
+        postman.post(action, formData, function (response) {
+            console.log(response)
+            document.getElementById('productTable').outerHTML = response;
+            $('#productModal').removeClass('is-active');
+        }, function (response) {
+            console.log(response)
+        })
+    })
+</script>
+</body>
+</html>

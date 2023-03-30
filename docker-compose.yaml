@@ -1,0 +1,43 @@
+version: "3.8"
+# Create a docker network
+networks:
+  my_lan:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.5
+services:
+  primary:
+    image: bitnami/postgresql:14.7.0
+    networks:
+      my_lan: #Assign network
+        ipv4_address: 192.168.0.10
+    deploy:
+      restart_policy:
+        condition: none
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_USERNAME=boss
+      - POSTGRESQL_PASSWORD=123456
+      - POSTGRESQL_DATABASE=product
+      - POSTGRESQL_REPLICATION_USER=replica_user
+      - POSTGRESQL_REPLICATION_PASSWORD=r123456
+    ports:
+      - "5400:5432"
+  replica:
+    image: bitnami/postgresql:14.7.0
+    networks:
+      my_lan: #Assign network
+        ipv4_address: 192.168.0.15
+    deploy:
+      restart_policy:
+        condition: none
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_MASTER_HOST=192.168.0.10
+      - POSTGRESQL_MASTER_PORT_NUMBER=5432
+      - POSTGRESQL_REPLICATION_USER=replica_user
+      - POSTGRESQL_REPLICATION_PASSWORD=r123456
+    ports:
+      - "5500:5432"

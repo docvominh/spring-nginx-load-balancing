@@ -1,0 +1,20 @@
+<table xmlns:th="http://www.thymeleaf.org" id="productTable" class="table is-bordered">
+  <thead>
+  <tr>
+    <th>Id</th>
+    <th>Category</th>
+    <th>Name</th>
+    <th>Manufacture</th>
+    <th>Price</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="p:${products}">
+    <td th:text="${p.id}"></td>
+    <td th:text="${p.category}"></td>
+    <td th:text="${p.name}"></td>
+    <td th:text="${p.manufacture}"></td>
+    <td th:text="${p.price}"></td>
+  </tr>
+  </tbody>
+</table>

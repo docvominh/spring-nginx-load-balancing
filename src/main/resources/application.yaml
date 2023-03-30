@@ -1,0 +1,49 @@
+server:
+  address: localhost
+  port: 8080
+
+spring:
+  datasource:
+    primary:
+      url: jdbc:postgresql://localhost:5400/product
+      driver-class-name: org.postgresql.Driver
+      username: boss
+      password: 123456
+      hikari:
+        maximum-pool-size: 10
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+    replica:
+      url: jdbc:postgresql://localhost:5500/product
+      driver-class-name: org.postgresql.Driver
+      username: boss
+      password: 123456
+      hikari:
+        maximum-pool-size: 10
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        hbm2ddl:
+          auto: none
+        show_sql: true
+        format_sql: false
+        use_sql_comments: false
+        connection:
+          provider_disables_autocommit: true
+          handling_mode: DELAYED_ACQUISITION_AND_RELEASE_AFTER_TRANSACTION
+    open-in-view: false
+
+logging:
+  level:
+    org:
+      hibernate:
+        sql: DEBUG
