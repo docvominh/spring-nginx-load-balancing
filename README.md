@@ -1,4 +1,4 @@
-# scalable-web
+# load balancing web
 
 ## Architecture
 

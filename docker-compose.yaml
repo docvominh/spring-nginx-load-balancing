@@ -14,6 +14,10 @@ services:
       my_lan: #Assign network
         ipv4_address: 192.168.0.10
     deploy:
+#      resources:
+#        limits:
+#          memory: 1024M
+#          cpus: '0.5'
       restart_policy:
         condition: none
     environment:
@@ -31,13 +35,36 @@ services:
       my_lan: #Assign network
         ipv4_address: 192.168.0.15
     deploy:
+#      resources:
+#        limits:
+#          memory: 1024M
+#          cpus: '0.5'
       restart_policy:
         condition: none
     environment:
       - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_USERNAME=boss
+      - POSTGRESQL_PASSWORD=123456
       - POSTGRESQL_MASTER_HOST=192.168.0.10
       - POSTGRESQL_MASTER_PORT_NUMBER=5432
       - POSTGRESQL_REPLICATION_USER=replica_user
       - POSTGRESQL_REPLICATION_PASSWORD=r123456
     ports:
       - "5500:5432"
+  app:
+    image: load-balancing-app:0.0.1-SNAPSHOT
+    networks:
+      my_lan: #Assign network
+        ipv4_address: 192.168.0.20
+    deploy:
+#      resources:
+#        limits:
+#          memory: 1024M
+#          cpus: '0.5'
+      restart_policy:
+        condition: none
+    environment:
+      - SPRING_DATASOURCE_PRIMARY_URL=jdbc:postgresql://192.168.0.10:5432/product
+      - SPRING_DATASOURCE_REPLICA_URL=jdbc:postgresql://192.168.0.15:5432/product
+    ports:
+      - "8500:8080"
