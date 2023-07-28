@@ -113,6 +113,11 @@ Check replica server if new table is streamed
 </div>
 
 ## Web application
-
+### Multi datasource route
+### Build docker image
 ## Load balancer
+### Nginx
+### Ip check
+## Load Test with Gatling
+### 
 
