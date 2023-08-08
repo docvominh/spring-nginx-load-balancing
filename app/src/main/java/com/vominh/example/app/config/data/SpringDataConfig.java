@@ -26,7 +26,6 @@ import java.util.Properties;
 @Profile("!test")
 public class SpringDataConfig {
 
-
     @Bean
     public DataSource dataSource() {
         return new LazyConnectionDataSourceProxy(routeDataSource());
